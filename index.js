@@ -24,7 +24,7 @@ app.get("/user", async (req, res) => {
   res.send({
     message: "User fetched sucessfully",
     user: user
-});
+    });
 
 });
 
@@ -69,7 +69,7 @@ app.put("/user", async (req, res) => {
     console.log("updatedUser ====> ", updatedUser);
 
     res.send({
-        message: "User fetched sucessfully",
+        message: "User updated sucessfully",
         updatedUser: updatedUser
     });
 });
@@ -97,6 +97,66 @@ app.delete("/user", async (req, res) => {
         console.log("error =====> ", error);
         throw error;
     }
+});
+
+app.get("/food" , async(req,res) => {
+
+    try {
+
+        res.send({
+            message: "fetched food successfully"
+        });
+
+    } catch (error) {
+        console.log("error =====> ", error);
+        throw error;
+    }
+
+});
+
+app.post("/food" , async(req,res) => {
+
+    try {
+
+        res.send({
+            message: "created food successfully"
+        });
+
+    } catch (error) {
+        console.log("error =====> ", error);
+        throw error;
+    }
+
+});
+
+app.put("/food" , async(req,res) => {
+
+    try {
+
+        res.send({
+            message: "updated food successfully"
+        });
+
+    } catch (error) {
+        console.log("error =====> ", error);
+        throw error;
+    }
+
+});
+
+app.delete("/food" , async(req,res) => {
+
+    try {
+
+        res.send({
+            message: "deleted food successfully"
+        });
+
+    } catch (error) {
+        console.log("error =====> ", error);
+        throw error;
+    }
+
 });
 
 app.listen(port, () => {
