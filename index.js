@@ -1,6 +1,7 @@
 const express = require("express");
 const { QueryTypes } = require("sequelize");
 const sequelize = require("./db");
+const FoodModel = require("./models/FoodModel");
 const UserModel = require("./models/UserModel");
 
 const app = express();
@@ -43,7 +44,7 @@ app.post("/user", async (req, res) => {
 
     } catch (error) {
         console.log("error =====> ", error);
-        throw error;
+        
     }
 });
 
@@ -95,21 +96,29 @@ app.delete("/user", async (req, res) => {
 
     } catch (error) {
         console.log("error =====> ", error);
-        throw error;
+        
     }
 });
+
+console.log("-----------------------------------------------");
 
 app.get("/food" , async(req,res) => {
 
     try {
 
+        console.log("req.query.id ====> ", req.query.id);
+        const getFood = await sequelize.query(`SELECT * FROM Food WHERE id='${req.query.id}'`, {
+            type: QueryTypes.SELECT
+        }) 
+
         res.send({
-            message: "fetched food successfully"
+            message: "fetched food successfully",
+            getFood
         });
 
     } catch (error) {
         console.log("error =====> ", error);
-        throw error;
+        
     }
 
 });
@@ -118,13 +127,20 @@ app.post("/food" , async(req,res) => {
 
     try {
 
+        console.log("Inside POST");
+        console.log("req.body ====> ", req.body);
+
+        const createdFood = await FoodModel.create(req.body);
+        console.log("createdFood ====> ", createdFood);
+
         res.send({
-            message: "created food successfully"
+            message: "created food successfully",
+            createdFood
         });
 
     } catch (error) {
         console.log("error =====> ", error);
-        throw error;
+        
     }
 
 });
@@ -133,13 +149,33 @@ app.put("/food" , async(req,res) => {
 
     try {
 
+        console.log("req.query.id ====> ", req.query.id);
+        console.log("req.body ====> ", req.body);
+    
+        let updatedFood = await FoodModel.update(req.body, {
+            where:{
+                id: req.query.id
+            }
+        })
+    
+        console.log("updatedFood ====> ", updatedFood);
+    
+        updatedFood = await FoodModel.findOne({
+            where:{
+                id: req.query.id
+            }
+        })
+        throw new Error("Test")
+    
+        console.log("updatedFood ====> ", updatedFood);
         res.send({
-            message: "updated food successfully"
+            message: "updated food successfully",
+            updatedFood
         });
 
     } catch (error) {
         console.log("error =====> ", error);
-        throw error;
+        
     }
 
 });
@@ -148,13 +184,25 @@ app.delete("/food" , async(req,res) => {
 
     try {
 
+        console.log("Inside DELETE");
+        console.log("req.query.id ====> ", req.query.id);
+        console.log("req.body ====> ", req.body);
+
+        let deletedFood = await FoodModel.destroy({
+            where: {
+               id: req.query.id
+            }
+        });
+        
+        console.log('deletedFood ===> ' , deletedFood);
         res.send({
-            message: "deleted food successfully"
+            message: "deleted food successfully",
+            deletedFood
         });
 
     } catch (error) {
         console.log("error =====> ", error);
-        throw error;
+        
     }
 
 });
@@ -170,6 +218,6 @@ app.listen(port, () => {
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
-        throw error;
+        
     }
   })()
